@@ -1,8 +1,8 @@
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
-	.WriteTo.Console()
-	.CreateLogger();
+    .WriteTo.Console()
+    .CreateLogger();
 
 Log.Verbose("hi A");
 Log.Debug("hi A");
