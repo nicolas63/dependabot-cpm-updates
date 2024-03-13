@@ -1,0 +1,38 @@
+name: Regenerate Dependabot.hack.csproj
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Directory.Packages.props"
+  workflow_dispatch:
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Dependabot.hack.regenerate.sh
+        run: |
+          chmod +x Dependabot.hack.regenerate.sh
+          ./Dependabot.hack.regenerate.sh
+
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet Dependabot.hack.csproj || echo "::set-output name=changed::true"
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update Dependabot.hack.csproj
+          title: Update Dependabot.hack.csproj
+          body: |
+            The `Dependabot.hack.csproj` file has been updated based on the changes in `Directory.Packages.props`.
+          branch: update-dependabot-hack
