@@ -21,13 +21,7 @@ jobs:
           chmod +x Dependabot.hack.regenerate.sh
           ./Dependabot.hack.regenerate.sh
 
-      - name: Check for changes
-        id: diff
-        run: |
-          git diff --quiet Dependabot.hack.csproj || echo "::set-output name=changed::true"
-
       - name: Create pull request
-        if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
